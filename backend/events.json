@@ -1,0 +1,36 @@
+{
+  "events": [
+    {
+      "title": "A new event",
+      "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/M%C3%BCnchen_Panorama.JPG/1024px-M%C3%BCnchen_Panorama.JPG",
+      "date": "2022-10-01",
+      "description": "Some awesome event!",
+      "id": "2a42fcc4-ea21-4bdd-abf6-c40006dc66a9"
+    },
+    {
+      "title": "Zagreb Film festival",
+      "image": "http://localhost:8080/pictures/zg_film_fest.jpg",
+      "date": "2025/11/10 - 2025/11/16",
+      "description": "23rd ZFF - Zagreb Film Festival",
+      "id": "3a42fcc4-ba21-6bdd-cbf6-g40006dc66a7"
+    },
+    {
+      "title": "Interliber",
+      "image": "http://localhost:8080/pictures/interliber.jpg",
+      
+      "date": "2025/11/11 - 2025/11/16",
+      "description": "INTERLIBER - 47th International Book Fair",
+      "id": "7a42fcc4-b521-6bdd-gbf6-z40006dc66a9"
+    },
+    {
+      "title": "Advent Zagreb",
+      "image": "http://localhost:8080/pictures/advent.jpg",
+      
+      "date": "2025/11/29 - 2026/01/07",
+      "description": "Advent Zagreb",
+      "id": "z642fcc4-c521-6bdd-tbf6-k60006dc66a9"
+    }
+  ],
+  "users": []
+}
+

@@ -1,0 +1,7 @@
+Install frontend depenedencies:
+
+npm install
+
+Run dev environment:
+
+npm start

@@ -1,0 +1,7 @@
+Install backend depenedencies:
+
+npm install
+
+Run dev environment:
+
+node app.js
