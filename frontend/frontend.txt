@@ -1,7 +1,40 @@
-Install frontend depenedencies:
+1. Git Bash / Powershell / CDM 
+
+-> Position yourself into auth-project/frontend
+
+2. If starting for the 1st time, install frontend dependencies:
 
 npm install
 
-Run dev environment:
+3. Run frontend server in dev environment:
 
 npm start
+
+---------------------------------------------------------------------------
+
+Structure of the frontend routes in App.js:
+
+/
+├── (RootLayout)
+│   │  
+│   ├── [index] → HomePage
+│   │  
+│   ├── /events (EventsRootLayout)
+│   │   │  
+│   │   ├── [index] (default child) → EventsPage   (loader: eventsLoader)
+│   │   │
+│   │   ├── /events/new → NewEventPage
+│   │   │                 (action: manipulateEventAction)
+│   │   │
+│   │   └── /events/:eventId (id: event-detail, loader: eventDetailLoader)
+│   │        │
+│   │        ├── [index] (default child) → EventDetailPage
+│   │        │             (action: deleteEventAction)
+│   │        │
+│   │        └── /events/:eventId/edit → EditEventPage
+│   │                                 (action: manipulateEventAction)
+│   │
+│   └── /newsletter → NewsletterPage
+│                     (action: newsletterAction)
+│
+└── errorElement → ErrorPage

@@ -3,7 +3,12 @@
 const express = require("express");
 const { add, get } = require("../data/user");
 const { createJSONToken, isValidPassword } = require("../util/auth");
-// createJSONToken - creates JWT (Json Web Token) for user authentification
+// createJSONToken - creates JWT (Json Web Token) for user authentification 
+// JWT is always created on the backend, with help of the secret KEY from .env - in util/auth.js, and then sent to client/browser
+// browser stores the JWT token and attaches it to future outgoing requests, and it should indicate if user is logged in (or not)
+// once expired, JWT token cannot be extended, but a new JWT token must be created (usually through refresh token)
+// once JWT token expires, client/browser sends refresh token to the server -> server checks refresh token and creates new access token
+
 // isValidPassword - compares plain text-password with hased password in the base / json-file
 const { isValidEmail, isValidText } = require("../util/validation");
 // validation functions for checking email and password
@@ -74,7 +79,7 @@ router.post("/login", async (req, res) => {
   }
 
   // if email and password are ok:
-  const token = createJSONToken(email);   // generates JWT token
+  const token = createJSONToken(email);   // generates/creates a JWT token
   res.json({ token });    // returns JSON with the token
 });
 

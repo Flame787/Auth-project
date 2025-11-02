@@ -1,7 +1,11 @@
-Install backend depenedencies:
+1. Git Bash / Powershell / CDM 
+
+-> Position yourself into auth-project/backend
+
+2. If starting for the 1st time, install backend dependencies:
 
 npm install
 
-Run dev environment:
+3. Run backend server in dev environment:
 
 node app.js

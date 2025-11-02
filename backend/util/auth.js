@@ -1,11 +1,11 @@
 const { sign, verify } = require("jsonwebtoken");
-// npm dependency - using functions sign & verify from jsonwebtoken package
+// jsonwebtoken - npm dependency, 3rd party package for creating a token; we use it's functions: sign() & verify()
 const { compare } = require("bcryptjs");
 // npm dependency
 const { NotAuthError } = require("./errors");
 
 // const KEY = 'supersecret';
-// secret key for signing JWT (JSON Web Token) - should be in .env (and not hardcoded)
+// secret key for signing JWT (JSON Web Token), needed to create a JWT - should be in .env (and not hardcoded)
 const KEY = process.env.JWT_SECRET;
 
 function createJSONToken(email) {
@@ -37,7 +37,8 @@ function checkAuthMiddleware(req, res, next) {
   // checking header - expects Authorization: Bearer <token>:
   // if header missing or has wrong format - error
   if (!req.headers.authorization) {
-    console.log("NOT AUTH. AUTH HEADER MISSING.");
+    console.log("NOT AUTH. AUTH HEADER MISSING.");    
+    // this error happens e.g. if trying to add new event before user has been authenticated
     return next(new NotAuthError("Not authenticated."));
   }
 

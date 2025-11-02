@@ -41,7 +41,7 @@ router.get('/:id', async (req, res, next) => {
  // Authentification middleware:
 router.use(checkAuth);  
 
-// All following routes below the 'router.use(checkAuth);' are NOT public anymore, but require authentification:
+// All following routes below the 'router.use(checkAuth);' are NOT public anymore, but require authentification (if request incule a valid token):
 
 //POST route - adds new event:
 

@@ -78,7 +78,7 @@ const app = express();
 
 // Whitelisted domens:
 const allowedOrigins = [
-  'http://localhost:3000',        // lokal frontend
+  'http://localhost:3000',        // local frontend
   'https://my-frontend.com',      // production
   'https://admin.my-frontend.com'
 ];
