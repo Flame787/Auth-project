@@ -3,7 +3,7 @@
 const express = require("express");
 const { add, get } = require("../data/user");
 const { createJSONToken, isValidPassword } = require("../util/auth");
-// createJSONToken - creates JWT (Json Web Token) for user authentification 
+// createJSONToken - creates JWT (Json Web Token) for user authentification
 // JWT is always created on the backend, with help of the secret KEY from .env - in util/auth.js, and then sent to client/browser
 // browser stores the JWT token and attaches it to future outgoing requests, and it should indicate if user is logged in (or not)
 // once expired, JWT token cannot be extended, but a new JWT token must be created (usually through refresh token)
@@ -15,43 +15,55 @@ const { isValidEmail, isValidText } = require("../util/validation");
 
 const router = express.Router(); // enables modular defining of routes, that later get connected into app.js
 
-// SIGN UP route (POST /signup):
+// SIGN UP route (POST /signup) - for creating a new user:
 
 router.post("/signup", async (req, res, next) => {
-  const data = req.body;   // reading data - expecting email & password
+  console.log(">>> /signup called");
+  console.log("Request body:", req.body);
+
+  const data = req.body; // reading data - expecting email & password
   let errors = {};
 
-  if (!isValidEmail(data.email)) {    
-    errors.email = "Invalid email.";      // if email not valid
+  if (!isValidEmail(data.email)) {
+    errors.email = "Invalid email."; // if email not valid
   } else {
     try {
-      const existingUser = await get(data.email);    
+      const existingUser = await get(data.email);
       // if already existing email - user already in the base, cannot Sign up with this address again:
       if (existingUser) {
         errors.email = "Email exists already.";
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error while checking existing user:", error);
+    }
   }
 
-  if (!isValidText(data.password, 6)) {    // password validation - must have at least 6 signs
+  if (!isValidText(data.password, 6)) {
+    // password validation - must have at least 6 signs
     errors.password = "Invalid password. Must be at least 6 characters long.";
   }
 
   if (Object.keys(errors).length > 0) {
+     console.warn("Validation errors:", errors);
     return res.status(422).json({
       message: "User signup failed due to validation errors.",
-      errors,    // if errors existing, returns '422 Unprocessable Entity' with message and details
+      errors, // if errors existing, returns '422 Unprocessable Entity' with message and details
     });
   }
 
   // new user registered, password hashed, JWT token created:
   try {
-    const createdUser = await add(data);   // if ok, adds user to json-file, password is hashed in data/user.js
-    const authToken = createJSONToken(createdUser.email);   // JWT token is generated
+    console.log("Creating new user with data:", data);
+    const createdUser = await add(data);
+    // if ok, adds user to json-file events.json (initially empty arrays 'users'), and password is hashed via data/user.js
+    console.log("User successfully created:", createdUser);
+    const authToken = createJSONToken(createdUser.email); // JWT token is generated
+    console.log("JWT token created:", authToken);
     res
-      .status(201)          // returns '201 Created' with message, user and token:
+      .status(201) // returns '201 Created' with message, user and token:
       .json({ message: "User created.", user: createdUser, token: authToken });
   } catch (error) {
+    console.error("Error in signup route:", error);
     next(error);
   }
 });
@@ -59,19 +71,26 @@ router.post("/signup", async (req, res, next) => {
 // LOGIN route (POST /login):
 
 router.post("/login", async (req, res) => {
+  console.log(">>> /login called");
+  console.log("Request body:", req.body);
+
   const email = req.body.email;
   const password = req.body.password;
   // reading email & password from req.body
 
   let user;
   try {
-    user = await get(email);    // fetches user by email
+    user = await get(email); // fetches user by email
+    console.log("Fetched user:", user);
   } catch (error) {
+    console.error("Error fetching user:", error);
     return res.status(401).json({ message: "Authentication failed." });
   }
 
-  const pwIsValid = await isValidPassword(password, user.password);   // compares entered password with hashed password for this user
-  if (!pwIsValid) {     // if password not valid:
+  const pwIsValid = await isValidPassword(password, user.password); // compares entered password with hashed password for this user
+  console.log("Password valid?", pwIsValid);
+  if (!pwIsValid) {
+    // if password not valid:
     return res.status(422).json({
       message: "Invalid credentials.",
       errors: { credentials: "Invalid email or password entered." },
@@ -79,12 +98,12 @@ router.post("/login", async (req, res) => {
   }
 
   // if email and password are ok:
-  const token = createJSONToken(email);   // generates/creates a JWT token
-  res.json({ token });    // returns JSON with the token
+  const token = createJSONToken(email); // generates/creates a JWT token
+  console.log("JWT token created:", token);
+  res.json({ token }); // returns JSON with the token
 });
 
-module.exports = router;    // router can be included in app.js
-
+module.exports = router; // router can be included in app.js
 
 /* 
 How checkAuth middleware would look like on Protected routes:

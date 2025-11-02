@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const { sign, verify } = require("jsonwebtoken");
 // jsonwebtoken - npm dependency, 3rd party package for creating a token; we use it's functions: sign() & verify()
 const { compare } = require("bcryptjs");

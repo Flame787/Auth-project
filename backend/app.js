@@ -1,9 +1,13 @@
 // backend entry point, made with Express.js:
 
+require('dotenv').config();     // needed for .env
+
 const bodyParser = require("body-parser"); // middleware for parsing req.body (e.g. JSON body from frontend request)
 const express = require("express");
 
 const path = require('path');    // needed to serve static files (pictures etc.)
+
+
 
 // const fs = require('fs');
 
@@ -54,6 +58,7 @@ app.use("/events", eventRoutes);    // mounts under /events - e.g. if in eventRo
 
 // Global error-handler - if any middleware or route throws error, it ends up here:
 app.use((error, req, res, next) => {
+  console.error("Global error handler:", error);
   const status = error.status || 500;
   const message = error.message || "Something went wrong.";
   res.status(status).json({ message: message });
@@ -61,7 +66,10 @@ app.use((error, req, res, next) => {
 
 
 // Starting the server:
-app.listen(8080);
+// app.listen(8080);
+app.listen(8080, () => {
+  console.log('Server running on port 8080');
+});
 
 
 /*   

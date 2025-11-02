@@ -41,7 +41,8 @@ function MainNavigation() {
           </li>
           <li>
             <NavLink
-              to="/auth"
+              to="/auth?mode=login"
+              // set to Login by default, but user can always change to Signup by clicking on the Link-button (toggle)
               className={({ isActive }) =>
                 isActive ? classes.active : undefined
               }
