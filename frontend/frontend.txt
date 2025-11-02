@@ -38,3 +38,11 @@ Structure of the frontend routes in App.js:
 │                     (action: newsletterAction)
 │
 └── errorElement → ErrorPage
+
+
+
+testUser for login (already existing user): 
+marmar@test.com
+
+password: 
+12345678

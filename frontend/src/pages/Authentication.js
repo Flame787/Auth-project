@@ -26,7 +26,8 @@ export async function action({ request }) {
     password: data.get("password"),
   };
 
-  const response = await fetch('http://localhost:8080/' + mode, {
+  // const response = await fetch('http://localhost:8080/' + mode, {...}
+  const response = await fetch('/api/' + mode, {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -42,6 +43,14 @@ export async function action({ request }) {
     throw json({ message: "Could not authenticate user" }, { status: 500 });
   }
 
-  // soon: manage the token
-  return redirect('/');   // once logged in, user is redirected to the home page
+  // manage the token
+
+const resData = await response.json();
+const token = resData.token;
+
+// saving the token in localStorage - we give it a key 'token' and store the real token there:
+localStorage.setItem('token', token)
+
+
+  return redirect('/');   // once logged in, user is redirected to the Home page
 }

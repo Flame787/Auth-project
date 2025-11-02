@@ -34,7 +34,10 @@ router.post("/signup", async (req, res, next) => {
         errors.email = "Email exists already.";
       }
     } catch (error) {
-      console.error("Error while checking existing user:", error);
+      if (error.status !== 404) {
+        console.error("Error while checking existing user - Unexpected error in get():", error);
+        return next(error); // stop signup if some other error shows up
+      }
     }
   }
 
@@ -44,7 +47,7 @@ router.post("/signup", async (req, res, next) => {
   }
 
   if (Object.keys(errors).length > 0) {
-     console.warn("Validation errors:", errors);
+    console.warn("Validation errors:", errors);
     return res.status(422).json({
       message: "User signup failed due to validation errors.",
       errors, // if errors existing, returns '422 Unprocessable Entity' with message and details

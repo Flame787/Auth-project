@@ -9,6 +9,7 @@ import {
 
 import EventItem from '../components/EventItem';
 import EventsList from '../components/EventsList';
+import { getAuthToken } from '../util/authtoken';
 
 function EventDetailPage() {
   const { event, events } = useRouteLoaderData('event-detail');
@@ -32,7 +33,7 @@ function EventDetailPage() {
 export default EventDetailPage;
 
 async function loadEvent(id) {
-  const response = await fetch('http://localhost:8080/events/' + id);
+  const response = await fetch('/api/events/' + id);
 
   if (!response.ok) {
     throw json(
@@ -48,7 +49,7 @@ async function loadEvent(id) {
 }
 
 async function loadEvents() {
-  const response = await fetch('http://localhost:8080/events');
+  const response = await fetch('/api/events');
 
   if (!response.ok) {
     // return { isError: true, message: 'Could not fetch events.' };
@@ -76,11 +77,16 @@ export async function loader({ request, params }) {
   });
 }
 
+const token = getAuthToken();
 export async function action({ params, request }) {
   const eventId = params.eventId;
-  const response = await fetch('http://localhost:8080/events/' + eventId, {
+  const response = await fetch('/api/events/' + eventId, {
     method: request.method,
+    headers: {
+      'Authorization': 'Bearer ' + token
+    }
   });
+  // very important: 'Authorization' - NOT 'Authorisation', and 'Bearer ' with space after the word, but inside the string!
 
   if (!response.ok) {
     throw json(
