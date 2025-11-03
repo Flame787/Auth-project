@@ -18,6 +18,7 @@ import AuthenticationPage, {
   action as authAction,
 } from "./pages/Authentication";
 import { action as logoutAction } from "./pages/Logout";
+import { tokenLoader } from "./util/authtoken";
 
 const router = createBrowserRouter([
   // receives an array of objects which define different routes; a modern way of configuring routes (instead <Routes><Route/></Routes>).
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />, // shows Root.js component
     errorElement: <ErrorPage />, // shows Error.js component
+    id: 'root',
+    loader: tokenLoader,
+    // extracts the token from local storage - called whenever a new navigation action occurs
+    // ensures that we always have the latest info about the token (e.g. logout - no more token) / alternative to Context or Redux
     children: [
       { index: true, element: <HomePage /> }, // shows Home.js component
       // index: true - means that this route is showing on / (default child route).
