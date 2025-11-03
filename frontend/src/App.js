@@ -18,7 +18,7 @@ import AuthenticationPage, {
   action as authAction,
 } from "./pages/Authentication";
 import { action as logoutAction } from "./pages/Logout";
-import { tokenLoader } from "./util/authtoken";
+import { checkAuthLoader, tokenLoader } from "./util/authtoken";
 
 const router = createBrowserRouter([
   // receives an array of objects which define different routes; a modern way of configuring routes (instead <Routes><Route/></Routes>).
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />, // shows Root.js component
     errorElement: <ErrorPage />, // shows Error.js component
-    id: 'root',
+    id: "root",
     loader: tokenLoader,
     // extracts the token from local storage - called whenever a new navigation action occurs
     // ensures that we always have the latest info about the token (e.g. logout - no more token) / alternative to Context or Redux
@@ -59,6 +59,7 @@ const router = createBrowserRouter([
                 path: "edit",
                 element: <EditEventPage />, // shows edit page for an event (EditEvent.js)
                 action: manipulateEventAction, // with possibility of editing the event
+                loader: checkAuthLoader,
               },
             ],
           },
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
             element: <NewEventPage />,
             // shows the form for adding a new event (NewEvent.js -> contains <EventForm>)
             action: manipulateEventAction, // backend mutation - saving new event
+            loader: checkAuthLoader,
           },
         ],
       },

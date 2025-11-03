@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 
 const { sign, verify } = require("jsonwebtoken");
 // jsonwebtoken - npm dependency, 3rd party package for creating a token; we use it's functions: sign() & verify()
@@ -36,10 +36,13 @@ function checkAuthMiddleware(req, res, next) {
   if (req.method === "OPTIONS") {
     return next();
   }
+
+  console.log("Auth header:", req.get("Authorization"));
+  
   // checking header - expects Authorization: Bearer <token>:
   // if header missing or has wrong format - error
   if (!req.headers.authorization) {
-    console.log("NOT AUTH. AUTH HEADER MISSING.");    
+    console.log("NOT AUTH. AUTH HEADER MISSING.");
     // this error happens e.g. if trying to add new event before user has been authenticated
     return next(new NotAuthError("Not authenticated."));
   }
@@ -58,7 +61,7 @@ function checkAuthMiddleware(req, res, next) {
   const authToken = authFragments[1];
   // takes 2nd element of the array (2nd element has id [1]) - which is actual JWT token (and Bearer-word is not needed for further checks)
   try {
-    const validatedToken = validateJSONToken(authToken);   // validates JWT token
+    const validatedToken = validateJSONToken(authToken); // validates JWT token
     // if token is ok - it gets saved into decoded payload in req.token:
     req.token = validatedToken;
   } catch (error) {

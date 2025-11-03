@@ -27,7 +27,7 @@ export async function action({ request }) {
   };
 
   // const response = await fetch('http://localhost:8080/' + mode, {...}
-  const response = await fetch('/api/' + mode, {
+  const response = await fetch("/api/" + mode, {
     method: "POST",
     headers: {
       "Content-type": "application/json",
@@ -45,12 +45,15 @@ export async function action({ request }) {
 
   // manage the token
 
-const resData = await response.json();
-const token = resData.token;
+  const resData = await response.json();
+  console.log("Login response:", resData);
+  const token = resData.token;
 
-// saving the token in localStorage - we give it a key 'token' and store the real token there:
-localStorage.setItem('token', token)
+  // saving the token in localStorage - we give it a key 'token' and store the real token there:
+  localStorage.setItem("token", token);
+  const expiration = new Date();
+  expiration.setHours(expiration.getHours() + 1); // creates a date that is 1h in the future
+  localStorage.setItem("expiration", expiration.toISOString());
 
-
-  return redirect('/');   // once logged in, user is redirected to the Home page
+  return redirect("/"); // once logged in, user is redirected to the Home page
 }
