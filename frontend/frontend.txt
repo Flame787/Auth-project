@@ -40,9 +40,119 @@ Structure of the frontend routes in App.js:
 └── errorElement → ErrorPage
 
 
+-----------------------------------------------
 
 testUser for login (already existing user): 
 marmar@test.com
 
 password: 
 12345678
+
+-----------------------------------------------
+
+How the app works:
+
+1. Login / Signup
+
+Frontend: AuthenticationPage.action
+
+fetch("/api/login") or fetch("/api/signup")
+
+Saves into localStorage:
+
+token → JWT string (eyJ...)
+
+expiration → ISO string (1h in the future)
+
+Backend: auth.js
+
+Verifies user and password (bcrypt.compare)
+
+Returns { token: <JWT> }
+
+
+2. Token Management
+
+getAuthToken()
+
+Reads token from localStorage
+
+If missing → null
+
+If expired (getTokenDuration() <= 0) → "EXPIRED"
+
+Otherwise returns the token
+
+getTokenDuration()
+
+Compares expiration from localStorage with Date.now()
+
+Returns milliseconds until expiration
+
+
+3. Root Loader & Auto‑Logout
+
+tokenLoader (in App.js root route)
+
+Returns result of getAuthToken()
+
+RootLayout
+
+If token === "EXPIRED" → immediately logs out
+
+Otherwise sets a setTimeout to auto‑logout after tokenDuration
+
+
+4. Protected Routes
+
+checkAuthLoader
+
+If getAuthToken() returns null → redirect to /auth
+
+If token exists → return null
+
+Used on:
+
+/events/new
+
+/events/:id/edit
+
+
+5. Using the Token in Requests
+
+Frontend (EventForm.action, EventDetail.action)
+
+Adds header:
+
+js
+Authorization: "Bearer " + token
+Backend (checkAuthMiddleware)
+
+Reads Authorization header
+
+If valid → req.token = jwt.verify(...)
+
+If invalid → throws 401 Not authenticated
+
+
+6. Logout
+
+Manual: clicking Logout → logoutAction removes token and expiration from localStorage
+
+Automatic: RootLayout timer after tokenDuration expires
+
+
+
+* Debug Checklist
+
+After login → check localStorage:
+
+token = JWT (eyJ...)
+
+expiration = ISO string
+
+In Network tab → all POST/PATCH/DELETE requests include Authorization: Bearer ...
+
+In backend console → req.token prints decoded payload (email, iat, exp)
+
+If undefined in GET routes → normal (public endpoints)
